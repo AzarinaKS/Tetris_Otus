@@ -3,7 +3,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Tetris
 {
-    class Program
+    class Program_Tetris
     {
         static void Main(string[] args)
         {
@@ -33,6 +33,12 @@ namespace Tetris
 
             // ВАРИАНТ ОТУС
 
+            Square s = new Square(2, 5, '*');
+            s.Draw();
+
+            Stick st = new Stick(4, 8, '#');
+            st.Draw();
+
             Point p1 = new Point(2, 3, '*');
             p1.Draw();
 
@@ -43,6 +49,7 @@ namespace Tetris
                 C = '#',
             };
             p2.Draw();
+
 
                 Console.ReadLine();
         }
