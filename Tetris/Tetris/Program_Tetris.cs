@@ -33,22 +33,32 @@ namespace Tetris
 
             // ВАРИАНТ ОТУС
 
-            Square s = new Square(2, 5, '*');
-            s.Draw();
+            //Square s = new Square(2, 5, '*');
+            //s.Draw();
 
-            Stick st = new Stick(4, 8, '#');
-            st.Draw();
+            //Stick st = new Stick(4, 8, '#');
+            //st.Draw();
 
-            Point p1 = new Point(2, 3, '*');
-            p1.Draw();
+            Figure[] f = new Figure[2];
+            f[0] = new Square(2, 3, '*');
+            f[1] = new Stick(4, 8, '#');
 
-            Point p2 = new Point()
+            foreach (Figure fig in f)
             {
-                X = 4,
-                Y = 5,
-                C = '#',
-            };
-            p2.Draw();
+                fig.Draw();
+            }
+
+
+            //Point p1 = new Point(2, 3, '*');
+            //p1.Draw();
+
+            //Point p2 = new Point()
+            //{
+            //    X = 4,
+            //    Y = 5,
+            //    C = '#',
+            //};
+            //p2.Draw();
 
 
                 Console.ReadLine();
