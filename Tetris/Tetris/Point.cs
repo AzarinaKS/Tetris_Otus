@@ -27,5 +27,27 @@ namespace Tetris
         }
 
         public Point() { }
+
+        internal void Move(Direction dir)
+        {
+            switch (dir)
+            {
+                case Direction.DOWN:
+                    Y += 1;
+                    break;
+                case Direction.LEFT:
+                    X -= 1;
+                    break;
+                case Direction.RIGHT:
+                    X += 1;
+                    break;
+            }
+        }
+
+        internal void Hide()
+        {
+            Console.SetCursorPosition(X, Y);
+            Console.Write(' ');
+        }
     }
 }

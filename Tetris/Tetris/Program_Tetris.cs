@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 
 namespace Tetris
 {
@@ -33,20 +34,23 @@ namespace Tetris
 
             // ВАРИАНТ ОТУС
 
-            //Square s = new Square(2, 5, '*');
-            //s.Draw();
+            Square s = new Square(2, 5, '*');
+            s.Draw();
+
+            Thread.Sleep(500);
+            s.Hide();
+            s.Move(Direction.LEFT);
+            s.Draw();
+
+            Thread.Sleep(500);
+            s.Hide();
+            s.Move(Direction.RIGHT);
+            s.Draw();
+
+
 
             //Stick st = new Stick(4, 8, '#');
             //st.Draw();
-
-            Figure[] f = new Figure[2];
-            f[0] = new Square(2, 3, '*');
-            f[1] = new Stick(4, 8, '#');
-
-            foreach (Figure fig in f)
-            {
-                fig.Draw();
-            }
 
 
             //Point p1 = new Point(2, 3, '*');
@@ -61,7 +65,7 @@ namespace Tetris
             //p2.Draw();
 
 
-                Console.ReadLine();
+            Console.ReadLine();
         }
     }
 }
