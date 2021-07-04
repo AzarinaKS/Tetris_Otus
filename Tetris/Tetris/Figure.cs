@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Tetris
 {
-    public class Figure
+    public abstract class Figure
     {
         protected Point[] points = new Point[4];
 
@@ -30,6 +30,8 @@ namespace Tetris
                 p.Hide();
             }
         }
+
+        public abstract void Rotate();
 
     }
 }
