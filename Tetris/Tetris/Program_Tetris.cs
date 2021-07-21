@@ -34,31 +34,14 @@ namespace Tetris
 
             // ВАРИАНТ ОТУС
 
-            Figure s = new Stick(20, 5, '*');
+            FigureGenerator generator = new FigureGenerator(20, 0, '*');
+            Figure s = null;
 
-            s.Draw();
-            Thread.Sleep(500);
-
-            s.Hide();
-            s.Rotate();
-            s.Draw();
-
-            Thread.Sleep(500);
-            s.Hide();
-            s.Move(Direction.LEFT);
-            s.Draw();
-
-            Thread.Sleep(500);
-            s.Hide();
-            s.Rotate();
-            s.Draw();
-
-            Thread.Sleep(500);
-            s.Hide();
-            s.Move(Direction.RIGHT);
-            s.Draw();
-
-
+            while (true)
+            {
+                FigureFall(ref s, generator);
+                s.Draw();
+            }
 
             //Stick st = new Stick(4, 8, '#');
             //st.Draw();
@@ -74,9 +57,21 @@ namespace Tetris
             //    C = '#',
             //};
             //p2.Draw();
-
-
-            Console.ReadLine();
         }
+
+        static void FigureFall(ref Figure fig, FigureGenerator generator)
+        {
+            fig = generator.GetNewFigure();
+            fig.Draw();
+
+            for (int i = 0; i < 20; i++)
+            {
+                fig.Hide();
+                fig.Move(Direction.DOWN);
+                fig.Draw();
+                Thread.Sleep(250);
+            }
+        }
+
     }
 }
