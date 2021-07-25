@@ -12,35 +12,36 @@ namespace Tetris
             points[1] = new Point(X, Y+1, sym);
             points[2] = new Point(X, Y+2, sym);
             points[3] = new Point(X, Y + 3, sym);
+            Draw();
         }
 
-        public override void Rotate()
+        public override void Rotate(Point[] plist)
         {
-            if (points[0].X == points[1].X)
+            if (plist[0].X == plist[1].X)
             {
-                RotateHorisontal();
+                RotateHorisontal(plist);
             }
             else
             {
-                RotateVertical();
+                RotateVertical(plist);
             }
         }
 
-        private void RotateVertical()
+        private void RotateVertical(Point[] plist)
         {
-            for (int i = 0; i < points.Length; i++)
+            for (int i = 0; i < plist.Length; i++)
             {
-                points[i].Y = points[0].Y+i;
-                points[i].X = points[0].X;
+                plist[i].Y = plist[0].Y+i;
+                plist[i].X = plist[0].X;
             }
         }
 
-        private void RotateHorisontal()
+        private void RotateHorisontal(Point[] plist)
         {
-            for (int i = 0; i < points.Length; i++)
+            for (int i = 0; i < plist.Length; i++)
             {
-                points[i].Y = points[0].Y;
-                points[i].X = points[0].X + i;
+                plist[i].Y = plist[0].Y;
+                plist[i].X = plist[0].X + i;
             }
         }
     }
