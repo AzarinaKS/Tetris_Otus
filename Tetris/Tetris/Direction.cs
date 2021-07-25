@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Tetris
 {
-    enum Direction
+    public enum Direction
     {
         LEFT, RIGHT, DOWN
     }

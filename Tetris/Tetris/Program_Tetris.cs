@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 
@@ -11,67 +12,38 @@ namespace Tetris
             Console.SetWindowSize(40, 30);
             Console.SetBufferSize(40, 30);
 
-            // ВАРИАНТ СЕРЕЖИ
-            //var p1 = new Point
-            //{
-            //    C = '*',
-            //    X = 3,
-            //    Y = 5
-            //};
-
-            //var p2 = new Point
-            //{
-            //    C = '*',
-            //    X = 6,
-            //    Y = 8
-            //};
-
-            //p1.Draw();
-            //p2.Draw();
-
-            //Point p1 = new Point();
-            //p1.Draw();
-
-            // ВАРИАНТ ОТУС
-
             FigureGenerator generator = new FigureGenerator(20, 0, '*');
-            Figure s = null;
+            Figure currentFigure = generator.GetNewFigure();
 
             while (true)
             {
-                FigureFall(ref s, generator);
-                s.Draw();
+                if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey();
+                    HandleKey(currentFigure, key);
+
+                }
             }
-
-            //Stick st = new Stick(4, 8, '#');
-            //st.Draw();
-
-
-            //Point p1 = new Point(2, 3, '*');
-            //p1.Draw();
-
-            //Point p2 = new Point()
-            //{
-            //    X = 4,
-            //    Y = 5,
-            //    C = '#',
-            //};
-            //p2.Draw();
         }
 
-        static void FigureFall(ref Figure fig, FigureGenerator generator)
+        private static void HandleKey(Figure currentFigure, in ConsoleKeyInfo key)
         {
-            fig = generator.GetNewFigure();
-            fig.Draw();
-
-            for (int i = 0; i < 20; i++)
+            switch (key.Key)
             {
-                fig.Hide();
-                fig.Move(Direction.DOWN);
-                fig.Draw();
-                Thread.Sleep(250);
+                case ConsoleKey.LeftArrow:
+                    currentFigure.TryMove(Direction.LEFT);
+                    break;
+                case ConsoleKey.RightArrow:
+                    currentFigure.TryMove(Direction.RIGHT);
+                    break;
+                case ConsoleKey.DownArrow:
+                    currentFigure.TryMove(Direction.DOWN);
+                    break;
+                case ConsoleKey.Spacebar:
+                    currentFigure.TryRotate();
+                    break;
             }
         }
-
     }
+
 }
