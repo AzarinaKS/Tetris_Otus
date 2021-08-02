@@ -6,12 +6,12 @@ namespace Tetris
 {
     public abstract class Figure
     {
-        const int LENGHT = 4;
-        protected Point[] points = new Point[LENGHT];
+        const int LENGTH = 4;
+        public Point[] Points = new Point[LENGTH];
 
         public void Draw()
         {
-            foreach (Point p in points)
+            foreach (Point p in Points)
             {
                 p.Draw();
             }
@@ -24,7 +24,7 @@ namespace Tetris
             Move(clone, dir);
 
             if (VerifyPosition(clone))
-                points = clone;
+                Points = clone;
 
             Draw();
         }
@@ -36,7 +36,7 @@ namespace Tetris
             Rotate(clone);
 
             if (VerifyPosition(clone))
-                points = clone;
+                Points = clone;
 
             Draw();
         }
@@ -45,7 +45,7 @@ namespace Tetris
         {
             foreach (var p in plist)
             {
-                if (p.X < 0 || p.Y < 0 || p.X >= 40 || p.Y >= 30)
+                if (p.X < 0 || p.Y < 0 || p.X >= Field.Width || p.Y >= Field.Height)
                     return false;
             }
             return true;
@@ -54,10 +54,10 @@ namespace Tetris
 
         private Point[] Clone()
         {
-            var newPoints = new Point[LENGHT];
-            for (int i = 0; i < LENGHT; i++)
+            var newPoints = new Point[LENGTH];
+            for (int i = 0; i < LENGTH; i++)
             {
-                newPoints[i] = new Point(points[i]);
+                newPoints[i] = new Point(Points[i]);
             }
 
             return newPoints;
@@ -84,7 +84,7 @@ namespace Tetris
         //}
         public void Hide()
         {
-            foreach (Point p in points)
+            foreach (Point p in Points)
             {
                 p.Hide();
             }

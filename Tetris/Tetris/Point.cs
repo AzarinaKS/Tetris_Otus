@@ -5,9 +5,9 @@ namespace Tetris
 {
     public class Point
     {
-        public int X;
-        public int Y;
-        public char C;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public char C { get; set; }
 
         public void Draw()
         {
