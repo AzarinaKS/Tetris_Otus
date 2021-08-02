@@ -8,10 +8,10 @@ namespace Tetris
     {
         public Stick(int X, int Y, char sym)
         {
-            points[0] = new Point(X, Y, sym);
-            points[1] = new Point(X, Y+1, sym);
-            points[2] = new Point(X, Y+2, sym);
-            points[3] = new Point(X, Y + 3, sym);
+            Points[0] = new Point(X, Y, sym);
+            Points[1] = new Point(X, Y+1, sym);
+            Points[2] = new Point(X, Y+2, sym);
+            Points[3] = new Point(X, Y + 3, sym);
             Draw();
         }
 
