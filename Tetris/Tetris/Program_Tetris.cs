@@ -3,12 +3,18 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Authentication.ExtendedProtection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using System.Timers;
 
 namespace Tetris
 {
     class Program_Tetris
     {
-        private static FigureGenerator generator;
+        static System.Timers.Timer aTimer;
+        const int TIMER_INTERVAL = 500;
+        static private Object _lockObject = new object();
+
+        static Figure currentFigure;
+        static FigureGenerator generator;
         static void Main(string[] args)
         {
             Console.SetWindowSize(Field.Width, Field.Height);
@@ -22,8 +28,10 @@ namespace Tetris
                 if (Console.KeyAvailable)
                 {
                     var key = Console.ReadKey();
+                    Monitor.Enter(_lockObject);
                     var result = HandleKey(currentFigure, key.Key);
                     ProcessResult(result, ref currentFigure);
+                    Monitor.Exit(_lockObject);
 
                 }
             }
@@ -57,6 +65,22 @@ namespace Tetris
             }
 
             return Result.SUCCESS;
+        }
+
+        private static void SetTimer()
+        {
+            aTimer = new System.Timers.Timer(TIMER_INTERVAL);
+            aTimer.Elapsed += OnTimedEvent;
+            aTimer.AutoReset = true;
+            aTimer.Enabled = true;
+        }
+
+        private static void OnTimedEvent(object sender, ElapsedEventArgs e)
+        {
+            Monitor.Enter(_lockObject);
+            var result = currentFigure.TryMove(Direction.DOWN);
+            ProcessResult(result, ref currentFigure);
+            Monitor.Exit(_lockObject);
         }
     }
 
