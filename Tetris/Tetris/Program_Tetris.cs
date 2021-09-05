@@ -3,24 +3,18 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Authentication.ExtendedProtection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-using System.Timers;
 
 namespace Tetris
 {
     class Program_Tetris
     {
-        static System.Timers.Timer aTimer;
-        const int TIMER_INTERVAL = 500;
-        static private Object _lockObject = new object();
-
-        static Figure currentFigure;
-        static FigureGenerator generator;
+        private static FigureGenerator generator;
         static void Main(string[] args)
         {
             Console.SetWindowSize(Field.Width, Field.Height);
             Console.SetBufferSize(Field.Width, Field.Height);
 
-            generator = new FigureGenerator(Field.Width / 2, 0, Drawer.DEFAULT_SYMBOL);
+            generator = new FigureGenerator(20, 0, '*');
             Figure currentFigure = generator.GetNewFigure();
 
             while (true)
@@ -28,10 +22,8 @@ namespace Tetris
                 if (Console.KeyAvailable)
                 {
                     var key = Console.ReadKey();
-                    Monitor.Enter(_lockObject);
                     var result = HandleKey(currentFigure, key.Key);
                     ProcessResult(result, ref currentFigure);
-                    Monitor.Exit(_lockObject);
 
                 }
             }
@@ -65,22 +57,6 @@ namespace Tetris
             }
 
             return Result.SUCCESS;
-        }
-
-        private static void SetTimer()
-        {
-            aTimer = new System.Timers.Timer(TIMER_INTERVAL);
-            aTimer.Elapsed += OnTimedEvent;
-            aTimer.AutoReset = true;
-            aTimer.Enabled = true;
-        }
-
-        private static void OnTimedEvent(object sender, ElapsedEventArgs e)
-        {
-            Monitor.Enter(_lockObject);
-            var result = currentFigure.TryMove(Direction.DOWN);
-            ProcessResult(result, ref currentFigure);
-            Monitor.Exit(_lockObject);
         }
     }
 
