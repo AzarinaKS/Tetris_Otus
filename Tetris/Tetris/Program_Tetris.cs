@@ -3,18 +3,23 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Authentication.ExtendedProtection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using System.Timers;
 
 namespace Tetris
 {
     class Program_Tetris
     {
+        private const int TIMER_INTERVAL = 500;
+        private static System.Timers.Timer timer;
+        static private Object _lockObject = new object();
+
+        private static Figure currentFigure;
         private static FigureGenerator generator;
         static void Main(string[] args)
         {
-            Console.SetWindowSize(Field.Width, Field.Height);
-            Console.SetBufferSize(Field.Width, Field.Height);
+            DrawerProvider.Drawer.InitField();
 
-            generator = new FigureGenerator(20, 0, '*');
+            generator = new FigureGenerator(Field.Width / 2, 0);
             Figure currentFigure = generator.GetNewFigure();
 
             while (true)
@@ -22,8 +27,10 @@ namespace Tetris
                 if (Console.KeyAvailable)
                 {
                     var key = Console.ReadKey();
+                    Monitor.Enter(_lockObject);
                     var result = HandleKey(currentFigure, key.Key);
                     ProcessResult(result, ref currentFigure);
+                    Monitor.Exit(_lockObject);
 
                 }
             }
@@ -35,8 +42,18 @@ namespace Tetris
             {
                 Field.AddFigure(currentFigure);
                 Field.TryDeleteLines();
-                currentFigure = generator.GetNewFigure();
-                return true;
+
+                if (currentFigure.IsOnTop())
+                {
+                    DrawerProvider.Drawer.WriteGameOver();
+                    timer.Elapsed -= OnTimedEvent;
+                    return true;
+                }
+                else
+                {
+                    currentFigure = generator.GetNewFigure();
+                    return true;
+                }
             }
             else
                 return false;
@@ -57,6 +74,22 @@ namespace Tetris
             }
 
             return Result.SUCCESS;
+        }
+
+        private static void SetTimer()
+        {
+            timer = new System.Timers.Timer(TIMER_INTERVAL);
+            timer.Elapsed += OnTimedEvent;
+            timer.AutoReset = true;
+            timer.Enabled = true;
+        }
+
+        private static void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            Monitor.Enter(_lockObject);
+            var result = currentFigure.TryMove(Direction.DOWN);
+            ProcessResult(result, ref currentFigure);
+            Monitor.Exit(_lockObject);
         }
     }
 

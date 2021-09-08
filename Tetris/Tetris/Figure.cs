@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Tetris
@@ -20,35 +21,20 @@ namespace Tetris
         internal Result TryMove(Direction dir)
         {
             Hide();
-            var clone = Clone();
-            Move(clone, dir);
 
-            var result = VerifyPosition(clone);
-            if (result ==Result.SUCCESS)
-                Points = clone;
+            Move(dir);
 
-            Draw();
-
-            return result;
-        }
-
-        internal Result TryRotate()
-        {
-            Hide();
-            var clone = Clone();
-            Rotate(clone);
-
-            var result = VerifyPosition(clone);
-            if (result == Result.SUCCESS)
-                Points = clone;
+            var result = VerifyPosition();
+            if (result !=Result.SUCCESS)
+                Move(Reverse(dir));
 
             Draw();
             return result;
         }
 
-        private Result VerifyPosition(Point[] newPoints)
+        private Result VerifyPosition()
         {
-            foreach (var p in newPoints)
+            foreach (var p in Points)
             {
                 if (p.Y >= Field.Height)
                     return Result.DOWN_BORDER_STRIKE;
@@ -59,41 +45,11 @@ namespace Tetris
                 if (Field.CheckStrike(p))
                     return Result.HEAP_STRIKE;
             }
+
             return Result.SUCCESS;
         }
 
-
-        private Point[] Clone()
-        {
-            var newPoints = new Point[LENGTH];
-            for (int i = 0; i < LENGTH; i++)
-            {
-                newPoints[i] = new Point(Points[i]);
-            }
-
-            return newPoints;
-        }
-
-        public void Move(Point[] plist, Direction dir)
-        {
-            foreach (var p in plist)
-            {
-                p.Move(dir);
-            }
-        }
-
-
-
-        //public void Move(Direction dir)
-        //{
-        //    Hide();
-        //    foreach (Point p in points)
-        //    {
-        //        p.Move(dir);
-        //    }
-        //    Draw();
-        //}
-        public void Hide()
+        private void Hide()
         {
             foreach (Point p in Points)
             {
@@ -101,7 +57,50 @@ namespace Tetris
             }
         }
 
-        public abstract void Rotate(Point[] plist);
+        public void Move(Direction dir)
+        {
+            foreach (var p in Points)
+                {
+                    p.Move(dir);
+                }
+        }
 
+        private Direction Reverse(Direction dir)
+        {
+            switch (dir)
+            {
+                case Direction.LEFT:
+                    return Direction.RIGHT;
+                case Direction.RIGHT:
+                    return Direction.LEFT;
+                case Direction.DOWN:
+                    return Direction.UP;
+                case Direction.UP:
+                    return Direction.DOWN;
+            }
+
+            return dir;
+
+        }
+
+        internal bool IsOnTop()
+        {
+            return Points[0].Y == 0;
+        }
+
+        public abstract void Rotate();
+
+        public Result TryRotate()
+        {
+            Hide();
+                Rotate();
+
+                var result = VerifyPosition();
+                if (result != Result.SUCCESS)
+                    Rotate();
+
+                Draw();
+                return result;
+            }
     }
 }

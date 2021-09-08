@@ -10,26 +10,14 @@ namespace Tetris
         public static int Width
         {
             get { return _width; }
-            set
-            {
-                _width = value;
-                Console.SetWindowSize(Field._width, Field._height);
-                Console.SetBufferSize(Field._width, Field._height);
-            }
         }
 
         public static int Height
         {
             get { return _height; }
-            set
-            {
-                _height = value;
-                Console.SetWindowSize(Field._width, Field._height);
-                Console.SetBufferSize(Field._width, Field._height);
-            }
         }
 
-        private static int _width = 30;
+        private static int _width = 20;
         private static int _height = 20;
 
         private static bool[][] _heap;
@@ -81,9 +69,9 @@ namespace Tetris
                 for (int i = 0; i < Width; i++)
                 {
                     if (_heap[j][i])
-                        Drawer.DrawPoint(i, j);
+                        DrawerProvider.Drawer.DrawPoint(i, j);
                     else
-                        Drawer.HidePoint(i, j);
+                        DrawerProvider.Drawer.HidePoint(i, j);
                 }
             }
         }
